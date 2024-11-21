@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const qrRoutes = require('./routes/qrRoutes');
+const path = require('path');
 
 dotenv.config();        
 
@@ -20,6 +21,13 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Routes
 app.use('/api/qrcodes', qrRoutes);
+
+// Serve static files
+app.use(express.static(path.join(__dirname, '../frontend', 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'build', 'index.html'));
+});
 
 // Start the server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
